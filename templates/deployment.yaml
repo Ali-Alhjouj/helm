@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm-app.fullname" . }}
+  labels:
+    app: {{ include "helm-app.name" . }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ include "helm-app.name" . }}
+  template:
+    metadata:
+      labels:
+        app: {{ include "helm-app.name" . }}
+    spec:
+      containers:
+      - name: my
+        image: {{ .Values.image.repository }}
+        ports:
+          - containerPort: 80

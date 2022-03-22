@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: {{ include "helm-app.name" . }}
+  name: {{ include "helm-app.name" . }}
+  namespace: default
+spec:
+  ports:
+  - nodePort: 31133
+    port: {{ .Values.service.port }}
+    protocol: TCP
+    targetPort: {{ .Values.service.targetPort }}
+  selector:
+    app: {{ include "helm-app.name" . }}
+  type: NodePort  

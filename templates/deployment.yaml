@@ -3,19 +3,27 @@ kind: Deployment
 metadata:
   name: {{ include "helm-app.fullname" . }}
   labels:
-    app: {{ include "helm-app.name" . }}
+    app.kubernetes.io/name: {{ include "helm-app.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    # app.kubernetes.io/managed-by: {{ .Release.Service }}
+    # helm.sh/chart: {{ include "helm-app.chart" . }}
+    release: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: {{ include "helm-app.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/name: {{ include "helm-app.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ include "helm-app.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/name: {{ include "helm-app.name" . }}
+        release: {{ .Release.Name }}
     spec:
       containers:
-      - name: my
+      - name: {{ .Chart.Name }}
         image: {{ .Values.image.repository }}
         ports:
-          - containerPort: 80
+          - containerPort: {{ .Values.service.port }}

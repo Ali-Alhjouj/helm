@@ -2,15 +2,21 @@ apiVersion: v1
 kind: Service
 metadata:
   labels:
-    app: {{ include "helm-app.name" . }}
+    app.kubernetes.io/name: {{ include "helm-app.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    # app.kubernetes.io/managed-by: {{ .Release.Service }}
+    # helm.sh/chart: {{ include "helm-app.chart" . }}
+    release: {{ .Release.Name }}
   name: {{ include "helm-app.name" . }}
   namespace: default
 spec:
+  type: {{ .Values.service.type }}
+  selector:
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/name: {{ include "helm-app.name" . }}
+    release: {{ .Release.Name }}
   ports:
-  - nodePort: 31133
-    port: {{ .Values.service.port }}
+  - port: {{ .Values.service.port }}
     protocol: TCP
     targetPort: {{ .Values.service.targetPort }}
-  selector:
-    app: {{ include "helm-app.name" . }}
-  type: NodePort  
+    name: metrics

@@ -1,9 +1,48 @@
-replicaCount: 2
+replicaCount: 1
 
 image:
-  repository: nginx
+  repository: alialhjouj/hellword
 
 service:
-  port: 80
-  targetPort: 80
+  port: 5000
+  targetPort: 5000
   type: LoadBalancer
+
+# serviceMonitor:
+#   additionalLabels:
+#     release : prometheus
+
+
+serviceMonitor:
+  enabled: true
+  # interval: 30s
+  # scrapeTimeout: 10s
+  # namespace:
+  additionalLabels:
+    release: prometheus
+  # targetLabels: []
+  # metricRelabelings: []
+
+
+kubePrometheusStack:
+  enabled: true
+
+loki-stack:
+
+  lokiStack:
+    enabled: true
+
+  loki:
+    enabled: true
+
+  promtail:
+    enabled: true
+
+  # grafana:
+  #   enabled: true
+  #   sidecar:
+  #     datasources:
+  #       enabled: true
+  #   image:
+  #     tag: 8.3.5
+
